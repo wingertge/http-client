@@ -74,11 +74,10 @@ impl Future for InnerFuture {
 }
 
 mod fetch {
-    use js_sys::{Array, ArrayBuffer, Reflect, Uint8Array};
+    use js_sys::{Array, ArrayBuffer, Reflect, Uint8Array, JsCast};
     use wasm_bindgen::JsCast;
     use wasm_bindgen_futures::JsFuture;
-    use web_sys::window;
-    use web_sys::RequestInit;
+    use web_sys::{RequestInit, Window};
 
     use std::io;
     use std::iter::{IntoIterator, Iterator};
@@ -92,6 +91,10 @@ mod fetch {
     pub(crate) struct Request {
         init: RequestInit,
         url: String,
+    }
+    
+    fn window() -> Option<Window> {
+        Some(js_sys::global().unchecked_into::<web_sys::Window>())
     }
 
     impl Request {
